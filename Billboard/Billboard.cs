@@ -227,7 +227,7 @@ namespace Billboard
             spriteBatch.DrawString(spriteFont, message, Vector2.Zero, Color.White, 0, textOrigin, textSize, 0, 0);
             spriteBatch.End();
 
-            particleComponent.Draw(spriteBatch);
+            particleComponent.Draw(spriteBatch, basicEffect, projection, view);
 
             base.Draw(gameTime);
         }

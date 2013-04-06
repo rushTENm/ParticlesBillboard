@@ -117,13 +117,5 @@ namespace Billboard
             LastEmittedParticle = particle;
             i++;
         }
-
-        public void DrawParticles(SpriteBatch spriteBatch)
-        {
-            foreach (Particle particle in ParticleList)
-            {
-                spriteBatch.Draw(particle.Texture, particle.Position, null, particle.Color, particle.Rotation, particle.Center, particle.Scale, SpriteEffects.None, 0);
-            }
-        }
     }
 }

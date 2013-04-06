@@ -16,6 +16,11 @@ namespace Billboard
     {
         public List<Emitter> particleEmitterList;
 
+        Matrix invertY = Matrix.CreateScale(1, -1, 1);
+
+        Vector3 particlePosition = new Vector3(-20, 60, -10);
+        Vector3 viewSpacePosition;
+
         public ParticleComponent(BillboardGame game)
         {
             // TODO: Construct any child components here
@@ -43,8 +48,8 @@ namespace Billboard
             fireEmitter.ParticleRotation = new RandomMinMax(0);
             fireEmitter.RotationSpeed = new RandomMinMax(0);
             fireEmitter.ParticleFader = new ParticleFader(true, true, 0);
-            fireEmitter.ParticleScaler = new ParticleScaler(0.8f, 1f, 0, 1000);
-            fireEmitter.Position = new Vector2(640, 600);
+            fireEmitter.ParticleScaler = new ParticleScaler(0.4f, 0.6f, 0, 1000);
+            fireEmitter.Position = new Vector2(0, 370);
 
             Emitter smokeEmitter = new Emitter();
             smokeEmitter.Active = true;
@@ -56,11 +61,11 @@ namespace Billboard
             smokeEmitter.ParticleRotation = new RandomMinMax(0);
             smokeEmitter.RotationSpeed = new RandomMinMax(-0.008f, 0.008f);
             smokeEmitter.ParticleFader = new ParticleFader(true, true);
-            smokeEmitter.ParticleScaler = new ParticleScaler(0.2f, 1.2f, 50, smokeEmitter.ParticleLifeTime);
-            smokeEmitter.Position = new Vector2(640, 550);
+            smokeEmitter.ParticleScaler = new ParticleScaler(0.5f, 1f, 50, smokeEmitter.ParticleLifeTime);
+            smokeEmitter.Position = new Vector2(0, 0);
 
-            particleEmitterList.Add(fireEmitter);
             particleEmitterList.Add(smokeEmitter);
+            particleEmitterList.Add(fireEmitter);
         }
 
         /// <summary>
@@ -75,16 +80,25 @@ namespace Billboard
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, BasicEffect basicEffect, Matrix projection, Matrix view)
         {
-            spriteBatch.Begin();
+            basicEffect.World = invertY;
+            basicEffect.View = Matrix.Identity;
+            basicEffect.Projection = projection;
+
+            spriteBatch.Begin(0, null, null, DepthStencilState.DepthRead, RasterizerState.CullNone, basicEffect);
 
             foreach (Emitter emitter in particleEmitterList)
             {
-                emitter.DrawParticles(spriteBatch);
+                viewSpacePosition = Vector3.Transform(particlePosition, view * invertY);
+        
+                foreach (Particle particle in emitter.ParticleList)
+                {
+                    spriteBatch.Draw(particle.Texture, (particle.Position * 0.05f) + new Vector2(viewSpacePosition.X, viewSpacePosition.Y), null, particle.Color, particle.Rotation, particle.Center, particle.Scale * 0.5f, 0, viewSpacePosition.Z);
+                }
             }
 
-            spriteBatch.End();
+            spriteBatch.End(); 
         }
     }
 }
