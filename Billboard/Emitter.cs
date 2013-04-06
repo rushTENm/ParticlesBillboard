@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace Billboard
 {
     public class Emitter
     {
         // TODO: multiple emitters per loop !!
-        EmitterHelper emitterHelper = new EmitterHelper();
-
         public List<Particle> ParticleList { get; set; }
         public bool EmittedNewParticle { get; set; }
         public Particle LastEmittedParticle { get; set; }
@@ -33,6 +31,19 @@ namespace Billboard
         private double emitterFrequency = 0;	// in ms
         private double timeSinceLastEmission = 0;
 
+        Random random = new Random();
+
+        public double RandomizedDouble(RandomMinMax randomMinMax)
+        {
+            double min = randomMinMax.Min;
+            double max = randomMinMax.Max;
+
+            if (min == max)
+                return max;
+            else
+                return min + (random.NextDouble() * (max - min));
+        }
+
         public Emitter()
         {
             Active = true;
@@ -52,7 +63,7 @@ namespace Billboard
 
                     if (emitterFrequency == 0 || timeSinceLastEmission >= emitterFrequency)
                     {
-                        emitterFrequency = emitterHelper.RandomizedDouble(RandomEmissionInterval);
+                        emitterFrequency = RandomizedDouble(RandomEmissionInterval);
                         if (emitterFrequency == 0)
                         {
                             throw new Exception("emitter frequency cannot be below 0.1d !!");
@@ -96,10 +107,10 @@ namespace Billboard
 
             Particle particle = new Particle(TextureList[i],
                                              Position,
-                                             (float)emitterHelper.RandomizedDouble(ParticleSpeed),
-                                             (float)emitterHelper.RandomizedDouble(ParticleDirection),
-                                             MathHelper.ToRadians((float)emitterHelper.RandomizedDouble(ParticleRotation)),
-                                             (float)emitterHelper.RandomizedDouble(RotationSpeed),
+                                             (float)RandomizedDouble(ParticleSpeed),
+                                             (float)RandomizedDouble(ParticleDirection),
+                                             MathHelper.ToRadians((float)RandomizedDouble(ParticleRotation)),
+                                             (float)RandomizedDouble(RotationSpeed),
                                              Opacity);
             ParticleList.Add(particle);
             EmittedNewParticle = true;
@@ -107,11 +118,11 @@ namespace Billboard
             i++;
         }
 
-        public void DrawParticles(GameTime gameTime, SpriteBatch spriteBatch, Vector3 viewSpacePosition)
+        public void DrawParticles(SpriteBatch spriteBatch)
         {
             foreach (Particle particle in ParticleList)
             {
-                spriteBatch.Draw(particle.Texture, new Vector2(viewSpacePosition.X, viewSpacePosition.Y), null, particle.Color, particle.Rotation, particle.Center, particle.Scale * 0.1f, SpriteEffects.None, viewSpacePosition.Z);
+                spriteBatch.Draw(particle.Texture, particle.Position, null, particle.Color, particle.Rotation, particle.Center, particle.Scale, SpriteEffects.None, 0);
             }
         }
     }

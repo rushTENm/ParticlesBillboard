@@ -40,8 +40,6 @@ namespace Billboard
 
         ParticleComponent particleComponent;
 
-        Random random;
-
         #endregion
 
         #region Initialization
@@ -52,10 +50,8 @@ namespace Billboard
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferWidth = 1366;
-            graphics.PreferredBackBufferHeight = 768;
-
-            graphics.ApplyChanges();
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
 
             IsMouseVisible = true;
         }
@@ -63,10 +59,7 @@ namespace Billboard
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            random = new Random();
-
             particleComponent = new ParticleComponent(this);
-            this.Components.Add(particleComponent);
 
             base.Initialize();
         }
@@ -87,35 +80,7 @@ namespace Billboard
                 VertexColorEnabled = true,
             };
 
-            // TODO: use this.Content to load your game content here
-            Emitter fireEmitter = new Emitter();
-            fireEmitter.Active = true;
-            fireEmitter.TextureList.Add(Content.Load<Texture2D>("fire"));
-            fireEmitter.RandomEmissionInterval = new RandomMinMax(330);
-            fireEmitter.ParticleLifeTime = 1350;
-            fireEmitter.ParticleDirection = new RandomMinMax(0);
-            fireEmitter.ParticleSpeed = new RandomMinMax(1f);
-            fireEmitter.ParticleRotation = new RandomMinMax(0);
-            fireEmitter.RotationSpeed = new RandomMinMax(0);
-            fireEmitter.ParticleFader = new ParticleFader(true, true, 0);
-            fireEmitter.ParticleScaler = new ParticleScaler(0.8f, 1f, 0, 1000);
-            fireEmitter.Position = new Vector2(640, 600);
-
-            Emitter smokeEmitter = new Emitter();
-            smokeEmitter.Active = true;
-            smokeEmitter.TextureList.Add(Content.Load<Texture2D>("smoke"));
-            smokeEmitter.RandomEmissionInterval = new RandomMinMax(45);
-            smokeEmitter.ParticleLifeTime = 1350;
-            smokeEmitter.ParticleDirection = new RandomMinMax(-15, 15);
-            smokeEmitter.ParticleSpeed = new RandomMinMax(4.5f);
-            smokeEmitter.ParticleRotation = new RandomMinMax(0);
-            smokeEmitter.RotationSpeed = new RandomMinMax(-0.008f, 0.008f);
-            smokeEmitter.ParticleFader = new ParticleFader(true, true);
-            smokeEmitter.ParticleScaler = new ParticleScaler(0.2f, 1.2f, 50, smokeEmitter.ParticleLifeTime);
-            smokeEmitter.Position = new Vector2(640, 550);
-
-            particleComponent.particleEmitterList.Add(fireEmitter);
-            particleComponent.particleEmitterList.Add(smokeEmitter);
+            particleComponent.LoadContent(Content);
         }
 
 
@@ -132,6 +97,8 @@ namespace Billboard
             HandleInput();
 
             UpdateCamera(gameTime);
+
+            particleComponent.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -260,7 +227,7 @@ namespace Billboard
             spriteBatch.DrawString(spriteFont, message, Vector2.Zero, Color.White, 0, textOrigin, textSize, 0, 0);
             spriteBatch.End();
 
-            particleComponent.Draw(gameTime, basicEffect, projection, view);
+            particleComponent.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }

@@ -111,9 +111,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Emitter.cs" />
-    <Compile Include="EmitterHelper.cs" />
     <Compile Include="Particle.cs" />
-    <Compile Include="ParticleComponet.cs" />
+    <Compile Include="ParticleComponent.cs" />
     <Compile Include="ParticleFader.cs" />
     <Compile Include="ParticleScaler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
