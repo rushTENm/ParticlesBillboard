@@ -120,6 +120,7 @@
       <Name>Billboard</Name>
     </Compile>
     <Compile Include="RandomMinMax.cs" />
+    <Compile Include="SpriteAnimation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico">

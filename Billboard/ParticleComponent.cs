@@ -38,19 +38,6 @@ namespace Billboard
 
         public void LoadContent(ContentManager content)
         {
-            Emitter fireEmitter = new Emitter();
-            fireEmitter.Active = true;
-            fireEmitter.TextureList.Add(content.Load<Texture2D>("fire"));
-            fireEmitter.RandomEmissionInterval = new RandomMinMax(330);
-            fireEmitter.ParticleLifeTime = 1350;
-            fireEmitter.ParticleDirection = new RandomMinMax(0);
-            fireEmitter.ParticleSpeed = new RandomMinMax(1f);
-            fireEmitter.ParticleRotation = new RandomMinMax(0);
-            fireEmitter.RotationSpeed = new RandomMinMax(0);
-            fireEmitter.ParticleFader = new ParticleFader(true, true, 0);
-            fireEmitter.ParticleScaler = new ParticleScaler(0.4f, 0.6f, 0, 1000);
-            fireEmitter.Position = new Vector2(0, 370);
-
             Emitter smokeEmitter = new Emitter();
             smokeEmitter.Active = true;
             smokeEmitter.TextureList.Add(content.Load<Texture2D>("smoke"));
@@ -65,7 +52,6 @@ namespace Billboard
             smokeEmitter.Position = new Vector2(0, 0);
 
             particleEmitterList.Add(smokeEmitter);
-            particleEmitterList.Add(fireEmitter);
         }
 
         /// <summary>

@@ -40,6 +40,8 @@ namespace Billboard
 
         ParticleComponent particleComponent;
 
+        SpriteAnimation fire;
+
         #endregion
 
         #region Initialization
@@ -61,6 +63,8 @@ namespace Billboard
             // TODO: Add your initialization logic here
             particleComponent = new ParticleComponent(this);
 
+            fire = new SpriteAnimation();
+
             base.Initialize();
         }
 
@@ -81,6 +85,8 @@ namespace Billboard
             };
 
             particleComponent.LoadContent(Content);
+
+            fire.Init(Content, "fire", Vector2.Zero, 4, 4, 14, 2, 1f);
         }
 
 
@@ -99,6 +105,8 @@ namespace Billboard
             UpdateCamera(gameTime);
 
             particleComponent.Update(gameTime);
+
+            fire.Update();
 
             base.Update(gameTime);
         }
@@ -213,8 +221,10 @@ namespace Billboard
                 }
             }
 
-            Vector3 textPosition = new Vector3(0, 45, 0);
+            particleComponent.Draw(spriteBatch, basicEffect, projection, view);
 
+            Vector3 textPosition = new Vector3(-45, 90, -10);
+            
             basicEffect.World = Matrix.CreateConstrainedBillboard(textPosition, textPosition - cameraFront, Vector3.Down, null, null);
             basicEffect.View = view;
             basicEffect.Projection = projection;
@@ -224,10 +234,12 @@ namespace Billboard
             const float textSize = 0.25f;
 
             spriteBatch.Begin(0, null, null, DepthStencilState.DepthRead, RasterizerState.CullNone, basicEffect);
-            spriteBatch.DrawString(spriteFont, message, Vector2.Zero, Color.White, 0, textOrigin, textSize, 0, 0);
-            spriteBatch.End();
 
-            particleComponent.Draw(spriteBatch, basicEffect, projection, view);
+            spriteBatch.DrawString(spriteFont, message, Vector2.Zero, Color.White, 0, textOrigin, textSize, 0, 0);
+
+            spriteBatch.Draw(fire.Texture, Vector2.Zero, new Rectangle(fire.columnPositon * fire.m_Width, fire.rowPositon * fire.m_Height, fire.m_Width, fire.m_Height), Color.White, 0f, Vector2.Zero,0.3f, 0, 0);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
